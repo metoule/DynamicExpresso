@@ -793,6 +793,19 @@ namespace DynamicExpresso.UnitTest
 			var doesntWork = (string) evaluator.Eval("StringConcat(GlobalSettings.MyTestPath,\"test.txt\")");
 			Assert.That(doesntWork, Is.EqualTo("C:\\delme\\test.txt"));
 		}
+
+		[Test]
+		public void Lambda_Issue_294()
+		{
+			var options = InterpreterOptions.Default | InterpreterOptions.LambdaExpressions;
+			var target = new Interpreter(options);
+			target.Reference(typeof(GithubIssuesTestExtensionsMethods));
+
+			var intMultiArray = new int[2, 3];
+			target.SetVariable("intMultiArray", intMultiArray);
+			var results = target.Eval<int>("intMultiArray.MultiArrayTest(t => t[0, 0], t => t[0, 1])");
+			Assert.That(results, Is.EqualTo(intMultiArray.MultiArrayTest(t => t[0, 0], t => t[0, 1])));
+		}
 	}
 
 	internal static class GithubIssuesTestExtensionsMethods
@@ -802,6 +815,11 @@ namespace DynamicExpresso.UnitTest
 		{
 			foreach (var item in source)
 				action(item);
+		}
+
+		public static int MultiArrayTest(this int[,] source, Func<int[,], int> func1, Func<int[,], int> func2)
+		{
+			return func1(source) + func2(source);
 		}
 	}
 }

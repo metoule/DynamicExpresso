@@ -159,9 +159,9 @@ namespace DynamicExpresso.Parsing
 					NextToken();
 					if (_token.id == TokenId.End)
 						inLambdaBody = false;
-					if (_token.id == TokenId.OpenParen || _token.id == TokenId.OpenCurlyBracket)
+					if (_token.id == TokenId.OpenParen || _token.id == TokenId.OpenCurlyBracket || _token.id == TokenId.OpenBracket)
 						parenCount++;
-					if (_token.id == TokenId.CloseParen || _token.id == TokenId.CloseCurlyBracket)
+					if (_token.id == TokenId.CloseParen || _token.id == TokenId.CloseCurlyBracket || _token.id == TokenId.CloseBracket)
 						parenCount--;
 
 					// lambda is a function parameter
